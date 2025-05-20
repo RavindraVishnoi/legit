@@ -23,7 +23,7 @@ function WelcomeContent() {
     <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 text-center">
       <Scale className="w-20 h-20 md:w-24 md:w-24 mb-6 text-primary opacity-70" />
       <h1 className="text-4xl md:text-5xl font-semibold mb-3 text-foreground">
-        Hello, {greetingName}!
+        hello, {greetingName}!
       </h1>
       <h2 className="text-xl md:text-2xl text-muted-foreground max-w-md md:max-w-lg">
         How can LEGIT help you today?
