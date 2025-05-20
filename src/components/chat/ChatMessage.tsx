@@ -15,7 +15,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div
       className={cn(
-        'flex items-start gap-3 my-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300',
+        'flex items-start gap-3 my-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 px-4', // Added px-4 for horizontal padding
         isUser ? 'justify-end' : 'justify-start'
       )}
     >

@@ -18,8 +18,8 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
   }, [messages]);
 
   return (
-    <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-      <div ref={viewportRef} className="h-full">
+    <ScrollArea className="flex-1" ref={scrollAreaRef}> {/* Removed p-4, padding handled by ChatMessage or ChatInterface */}
+      <div ref={viewportRef} className="h-full pt-4 pb-2"> {/* Added pt-4 for initial spacing */}
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}

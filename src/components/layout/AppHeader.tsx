@@ -1,5 +1,5 @@
 
-import { Scale, User, LogOut, LogIn } from 'lucide-react';
+import { Scale, User, LogOut, LogIn, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'; // Use next/navigation for App Rout
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface AppHeaderProps {
-  onNewChat: () => void; // Kept for potential future use or if sidebar triggers new chat through header
+  onNewChat: () => void; 
 }
 
 export function AppHeader({ onNewChat }: AppHeaderProps) {
@@ -32,20 +32,24 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
   };
   
   return (
-    <header className="flex items-center justify-between p-4 border-b border-border bg-card shadow-sm h-16">
+    <header className="flex items-center justify-between p-3 md:p-4 bg-background text-foreground h-16">
       <div className="flex items-center gap-2">
-        <Scale className="h-8 w-8 text-primary" />
-        <h1 className="text-2xl font-semibold text-primary">LEGIT</h1>
+        <Scale className="h-7 w-7 md:h-8 md:w-8 text-primary" />
+        <h1 className="text-xl md:text-2xl font-semibold text-primary">LEGIT</h1>
       </div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
+        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hidden sm:inline-flex">
+            <Info className="mr-1.5 h-4 w-4" />
+            About
+        </Button>
         {authLoading ? (
           <Skeleton className="h-10 w-24 rounded-md" />
         ) : currentUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
-                <Avatar className="h-10 w-10 border border-border shadow-sm">
+              <Button variant="ghost" className="relative h-9 w-9 md:h-10 md:w-10 rounded-full p-0">
+                <Avatar className="h-9 w-9 md:h-10 md:w-10 border border-border">
                   <AvatarImage 
                     src={currentUser.photoURL || `https://placehold.co/40x40.png?text=${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U'}`} 
                     alt={currentUser.displayName || 'User avatar'}
@@ -55,7 +59,7 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
                     {currentUser.displayName ? (
                       currentUser.displayName.charAt(0).toUpperCase()
                     ) : (
-                      <User className="h-5 w-5" />
+                      <User className="h-4 w-4 md:h-5 md:w-5" />
                     )}
                   </AvatarFallback>
                 </Avatar>
@@ -75,13 +79,6 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* Add other items like "Settings" or "Profile" here if needed */}
-              {/* <DropdownMenuItem onClick={onNewChat}>
-                 <PlusCircle className="mr-2 h-4 w-4" />
-                 New Chat
-              </DropdownMenuItem> 
-              <DropdownMenuSeparator /> 
-              */}
               <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
@@ -89,7 +86,7 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button onClick={handleLogin} variant="outline" className="rounded-lg shadow-sm">
+          <Button onClick={handleLogin} variant="outline" size="sm" className="rounded-lg">
             <LogIn className="mr-2 h-4 w-4" />
             Login
           </Button>

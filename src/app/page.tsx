@@ -199,7 +199,7 @@ export default function HomePage() {
     <div className="flex h-screen flex-col bg-background text-foreground">
       <AppHeader onNewChat={handleNewConversation} />
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-80 border-r border-border p-2 bg-muted/40 hidden md:block">
+        <div className="w-72 border-r border-sidebar-border bg-sidebar-background p-0 hidden md:flex md:flex-col">
           <HistorySidebar
             conversations={conversations}
             currentConversationId={currentConversationId}
@@ -209,7 +209,7 @@ export default function HomePage() {
             onClearHistory={handleClearHistory}
           />
         </div>
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-background">
           <ChatInterface
             messages={activeMessages}
             onSendMessage={handleSendMessage}

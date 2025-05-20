@@ -1,9 +1,10 @@
+
 "use client";
 
 import type { Conversation } from '@/lib/types';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PlusCircle, Trash2, MessageSquare, History } from 'lucide-react';
+import { Plus, Trash2, MessageSquareText, Settings, HelpCircle, Edit3 } from 'lucide-react'; // Changed PlusCircle to Plus, MessageSquare to MessageSquareText
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -16,7 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { Separator } from '@/components/ui/separator';
 
 
 interface HistorySidebarProps {
@@ -37,16 +39,19 @@ export function HistorySidebar({
   onClearHistory,
 }: HistorySidebarProps) {
   return (
-    <div className="flex h-full flex-col bg-card text-card-foreground shadow-lg rounded-lg">
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-2">
-          <History className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold">History</h2>
-        </div>
+    <div className="flex h-full flex-col bg-sidebar-background text-sidebar-foreground">
+      <div className="p-3">
+        <Button onClick={onNewConversation} variant="outline" className="w-full justify-start bg-transparent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border-sidebar-border">
+          <Edit3 className="mr-2 h-4 w-4" /> New Chat
+        </Button>
+      </div>
+      
+      <div className="flex items-center justify-between px-3 pt-2 pb-1">
+        <h2 className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Recent</h2>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="icon" title="Clear all history" disabled={conversations.length === 0}>
-              <Trash2 className="h-4 w-4 text-destructive" />
+            <Button variant="ghost" size="icon" title="Clear all history" disabled={conversations.length === 0} className="h-7 w-7">
+              <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -65,10 +70,8 @@ export function HistorySidebar({
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <Button onClick={onNewConversation} className="m-4">
-        <PlusCircle className="mr-2 h-4 w-4" /> New Chat
-      </Button>
-      <ScrollArea className="flex-1 px-2 mb-2">
+
+      <ScrollArea className="flex-1 px-3 mb-2">
         {conversations.length === 0 ? (
           <p className="p-4 text-sm text-muted-foreground text-center">No conversations yet.</p>
         ) : (
@@ -77,12 +80,16 @@ export function HistorySidebar({
               <div key={conv.id} className="group relative">
                 <Button
                   variant={conv.id === currentConversationId ? 'secondary' : 'ghost'}
-                  className="w-full justify-start h-auto py-2 px-3 text-left"
+                  className={cn(
+                    "w-full justify-start h-auto py-2 px-2.5 text-left rounded-md",
+                    conv.id === currentConversationId ? "bg-sidebar-accent/80 text-sidebar-accent-foreground" : "hover:bg-sidebar-accent/50"
+                  )}
                   onClick={() => onSelectConversation(conv.id)}
                 >
-                  <div className="flex flex-col overflow-hidden">
+                  <MessageSquareText className="mr-2 h-4 w-4 flex-shrink-0" />
+                  <div className="flex flex-col overflow-hidden flex-1">
                      <span className="font-medium truncate text-sm">{conv.title}</span>
-                     <span className="text-xs text-muted-foreground">
+                     <span className="text-xs text-muted-foreground/80">
                         {formatDistanceToNow(new Date(conv.updatedAt), { addSuffix: true })}
                      </span>
                   </div>
@@ -95,7 +102,7 @@ export function HistorySidebar({
                         className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 h-7 w-7"
                         title="Delete conversation"
                       >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -118,13 +125,15 @@ export function HistorySidebar({
           </div>
         )}
       </ScrollArea>
+      <Separator className="my-2 bg-sidebar-border" />
+      <div className="p-3 space-y-1">
+        <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50">
+          <HelpCircle className="mr-2 h-4 w-4" /> Help
+        </Button>
+        <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50">
+          <Settings className="mr-2 h-4 w-4" /> Settings
+        </Button>
+      </div>
     </div>
   );
 }
-
-// Helper for buttonVariants in AlertDialogAction
-const buttonVariants = ({ variant }: { variant: "destructive" | "outline" | "default" | "secondary" | "ghost" | "link" | null | undefined }) => {
-  if (variant === "destructive") return "bg-destructive text-destructive-foreground hover:bg-destructive/90";
-  // Add other variants if needed
-  return "";
-};
