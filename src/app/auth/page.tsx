@@ -97,7 +97,7 @@ export default function AuthPage() {
             onClick={signInWithGoogle}
             className="w-full text-base py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             size="lg"
-            variant="outline"
+            variant="secondary" // Changed from outline to secondary
             disabled={authLoading || emailAuthLoading}
           >
             {authLoading && !emailAuthLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GoogleIcon />}
