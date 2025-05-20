@@ -1,7 +1,8 @@
+
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bot, User } from 'lucide-react';
+import { User, Sparkles } from 'lucide-react'; // Changed Bot to Sparkles
 import { formatDistanceToNow } from 'date-fns';
 
 interface ChatMessageProps {
@@ -20,10 +21,10 @@ export function ChatMessage({ message }: ChatMessageProps) {
       )}
     >
       {!isUser && (
-        <Avatar className="h-8 w-8 border border-border shadow-sm">
-          <AvatarImage src="https://placehold.co/40x40.png" alt="AI Avatar" data-ai-hint="robot face" />
-          <AvatarFallback>
-            <Bot className="h-5 w-5 text-primary" />
+        <Avatar className="h-8 w-8 border-0 shadow-none bg-transparent"> {/* Removed border, shadow, bg for AI */}
+          {/* <AvatarImage src="https://placehold.co/40x40.png" alt="AI Avatar" data-ai-hint="robot face" /> REMOVED for AI */}
+          <AvatarFallback className="bg-transparent"> {/* Transparent fallback background */}
+            <Sparkles className="h-5 w-5 text-primary" /> {/* Using Sparkles icon for AI */}
           </AvatarFallback>
         </Avatar>
       )}

@@ -199,7 +199,7 @@ export default function ChatPage() {
     <div className="flex h-screen flex-col bg-background text-foreground">
       <AppHeader onNewChat={handleNewConversation} />
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-72 border-r border-sidebar-border bg-sidebar-background p-0 hidden md:flex md:flex-col">
+        <div className="group w-20 hover:w-72 transition-all duration-300 ease-in-out border-r border-sidebar-border bg-sidebar-background p-0 hidden md:flex md:flex-col overflow-hidden">
           <HistorySidebar
             conversations={conversations}
             currentConversationId={currentConversationId}
