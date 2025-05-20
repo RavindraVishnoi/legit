@@ -1,3 +1,4 @@
+
 // LegalQuery story implementation
 'use server';
 
@@ -35,7 +36,8 @@ const prompt = ai.definePrompt({
   Question: {{{query}}}
 
   Answer:`,
-  model: 'googleai/llama-3-8b',
+  // Using a generally available and stable model
+  model: 'googleai/gemini-1.5-flash-latest',
 });
 
 const legalQueryFlow = ai.defineFlow(
@@ -49,3 +51,4 @@ const legalQueryFlow = ai.defineFlow(
     return output!;
   }
 );
+
