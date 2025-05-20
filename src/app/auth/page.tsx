@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/label'; // Keep if using custom labels outside Form
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
@@ -45,7 +45,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!authLoading && currentUser) {
-      router.push('/');
+      router.push('/chat'); // Redirect to chat page if logged in
     }
   }, [currentUser, authLoading, router]);
 
@@ -67,7 +67,7 @@ export default function AuthPage() {
     );
   }
   
-  if (currentUser) {
+  if (currentUser) { // If logged in, show loader while redirecting
      return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -84,12 +84,11 @@ export default function AuthPage() {
       </div>
       <Card className="w-full max-w-md rounded-xl border-border/50 shadow-2xl overflow-hidden z-10">
         <CardHeader className="bg-card p-6 text-center">
-           {/* Removed Image component from here */}
           <CardTitle className="text-3xl font-bold tracking-tight text-primary pt-6">
-            Welcome to LEGIT
+            Access LEGIT
           </CardTitle>
           <CardDescription className="text-muted-foreground pt-1">
-            Your AI Legal Query Assistant
+            Sign in or create an account to continue
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -97,7 +96,7 @@ export default function AuthPage() {
             onClick={signInWithGoogle}
             className="w-full text-base py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             size="lg"
-            variant="secondary" // Changed from outline to secondary
+            variant="secondary"
             disabled={authLoading || emailAuthLoading}
           >
             {authLoading && !emailAuthLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GoogleIcon />}
@@ -140,7 +139,7 @@ export default function AuthPage() {
               />
               <Button type="submit" className="w-full text-base py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300" size="lg" disabled={emailAuthLoading || authLoading}>
                 {emailAuthLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                Sign In with Email
+                Sign In / Sign Up with Email
               </Button>
             </form>
           </Form>
@@ -155,4 +154,3 @@ export default function AuthPage() {
     </div>
   );
 }
-

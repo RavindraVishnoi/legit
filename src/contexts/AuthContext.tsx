@@ -40,15 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       toast({ title: "Signed In", description: "Successfully signed in with Google." });
-      if (pathname === '/auth') {
-        router.push('/');
+      // Redirect to /chat if on auth page, otherwise stay (or let page handle it)
+      if (pathname === '/auth' || pathname === '/') {
+        router.push('/chat');
       }
     } catch (error: any) {
       console.error("Error signing in with Google", error);
       toast({ title: "Sign In Failed", description: error.message || "Could not sign in with Google.", variant: "destructive" });
-      setLoading(false); // Explicitly set loading false on error
+      setLoading(false); 
     }
-    // setLoading(false) is primarily handled by onAuthStateChanged success, or explicitly on error here
   };
 
   const signInWithEmail = async (email: string, password: string) => {
@@ -56,21 +56,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: "Signed In", description: "Successfully signed in with email." });
-      if (pathname === '/auth') {
-        router.push('/');
+       // Redirect to /chat if on auth page, otherwise stay (or let page handle it)
+      if (pathname === '/auth' || pathname === '/') {
+        router.push('/chat');
       }
     } catch (error: any) {
       console.error("Error signing in with email", error);
       let errorMessage = "Could not sign in with email.";
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email') {
         errorMessage = 'Invalid email or password. Please try again.';
+      } else if (error.code === 'auth/user-disabled') {
+        errorMessage = 'This account has been disabled.';
       } else if (error.message) {
         errorMessage = error.message;
       }
       toast({ title: "Sign In Failed", description: errorMessage, variant: "destructive" });
-      setLoading(false); // Explicitly set loading false on error
+      setLoading(false); 
     }
-    // setLoading(false) is primarily handled by onAuthStateChanged success, or explicitly on error here
   };
 
   const signOutUser = async () => {
@@ -78,13 +80,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await firebaseSignOut(auth);
       toast({ title: "Signed Out", description: "You have been successfully signed out." });
-      router.push('/auth'); 
+      router.push('/'); // Redirect to the new landing page
     } catch (error: any) {
       console.error("Error signing out", error);
       toast({ title: "Sign Out Failed", description: error.message || "Could not sign out.", variant: "destructive" });
-      setLoading(false); // Explicitly set loading false on error
+      setLoading(false);
     }
-    // setLoading(false) is primarily handled by onAuthStateChanged success setting user to null, or explicitly on error here
   };
 
   return (
