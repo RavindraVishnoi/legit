@@ -1,24 +1,19 @@
 
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Scale } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Scale } from 'lucide-react'; // User icon is no longer needed here
 import { formatDistanceToNow } from 'date-fns';
-import { useAuth } from '@/contexts/AuthContext';
+// useAuth is no longer needed here directly as we are removing user-specific avatar logic that used it.
+// If other user-specific info was needed, we'd keep it.
 
 interface ChatMessageProps {
   message: Message;
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
-  const { currentUser } = useAuth();
   const isUser = message.sender === 'user';
   const timestamp = message.timestamp ? formatDistanceToNow(new Date(message.timestamp), { addSuffix: true }) : '';
-
-  const userAvatarSrc = currentUser?.photoURL;
-  const userAvatarFallback = currentUser?.displayName
-    ? currentUser.displayName.charAt(0).toUpperCase()
-    : <User className="h-5 w-5 text-muted-foreground" />;
 
   return (
     <div
@@ -52,14 +47,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           </p>
         )}
       </div>
-      {isUser && (
-        <Avatar className="h-8 w-8 border border-border shadow-sm">
-           <AvatarImage src={userAvatarSrc || "https://placehold.co/40x40.png"} alt={currentUser?.displayName || "User Avatar"} data-ai-hint="person silhouette" />
-          <AvatarFallback>
-            {userAvatarFallback}
-          </AvatarFallback>
-        </Avatar>
-      )}
+      {/* User avatar block has been removed as per request */}
     </div>
   );
 }
