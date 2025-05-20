@@ -4,7 +4,8 @@
 import type { Message } from '@/lib/types';
 import { ChatMessages } from './ChatMessages';
 import { ChatInput } from './ChatInput';
-import { Scale, Sparkles } from 'lucide-react'; // Using Sparkles as an AI-related icon
+import { Scale } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -14,15 +15,18 @@ interface ChatInterfaceProps {
 }
 
 function WelcomeContent() {
+  const { currentUser } = useAuth(); // Get currentUser
+
+  const greetingName = currentUser?.displayName ? currentUser.displayName.split(' ')[0] : 'there'; // Get first name or "there"
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 text-center">
-      {/* Optional: Icon can be added back if desired, for now focusing on text like Gemini */}
-      {/* <Sparkles className="w-20 h-20 md:w-24 md:h-24 mb-6 text-primary opacity-70" /> */}
+      <Scale className="w-20 h-20 md:w-24 md:w-24 mb-6 text-primary opacity-70" />
       <h1 className="text-4xl md:text-5xl font-semibold mb-3 text-foreground">
-        Meet <span className="text-primary">LEGIT</span>
+        Hello, {greetingName}!
       </h1>
       <h2 className="text-xl md:text-2xl text-muted-foreground max-w-md md:max-w-lg">
-        your personal AI legal assistant.
+        How can LEGIT help you today?
       </h2>
     </div>
   );
