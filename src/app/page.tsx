@@ -9,41 +9,51 @@ import type { Message, Conversation } from '@/lib/types';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { legalQuery } from '@/ai/flows/legal-query';
 import { useToast } from "@/hooks/use-toast";
-import { v4 as uuidv4 } from 'uuid'; // Using uuid for robust ID generation
+import { v4 as uuidv4 } from 'uuid';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 export default function HomePage() {
+  const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
+
   const [conversations, setConversations] = useLocalStorage<Conversation[]>('legitConversations', []);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [activeMessages, setActiveMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // For AI response loading
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!authLoading && !currentUser) {
+      router.push('/auth');
+    }
+  }, [currentUser, authLoading, router]);
 
   // Effect to load messages for the current conversation
   useEffect(() => {
-    if (currentConversationId) {
+    if (currentUser && currentConversationId) {
       const currentConv = conversations.find(c => c.id === currentConversationId);
       setActiveMessages(currentConv ? currentConv.messages : []);
-    } else {
-      setActiveMessages([]); // Clear messages if no conversation is selected
+    } else if (currentUser) { // User is logged in but no conversation selected
+      setActiveMessages([]); 
     }
-  }, [currentConversationId, conversations]);
+    // If no user, this effect should not run to change activeMessages, as page will redirect
+  }, [currentConversationId, conversations, currentUser]);
   
   // Auto-select most recent conversation if one exists and none is selected
   useEffect(() => {
-    if (!currentConversationId && conversations.length > 0) {
+    if (currentUser && !currentConversationId && conversations.length > 0) {
       const sortedConversations = [...conversations].sort((a,b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
       if (sortedConversations.length > 0) {
         setCurrentConversationId(sortedConversations[0].id);
       }
     }
-    // If no currentConversationId and no conversations, the ChatInterface will show WelcomeContent
-  }, [conversations, currentConversationId]);
-
+  }, [conversations, currentConversationId, currentUser]);
 
   const handleNewConversation = useCallback(() => {
+    if (!currentUser) return; // Should not happen if page is protected
     const newConvId = uuidv4();
-    // Initial title, will be updated by first message if user types directly
-    // or can be kept generic if new chat is initiated from button
     const newConversation: Conversation = {
       id: newConvId,
       title: 'New Chat', 
@@ -53,17 +63,21 @@ export default function HomePage() {
     };
     setConversations(prev => [newConversation, ...prev]);
     setCurrentConversationId(newConvId);
-    setActiveMessages([]); // Start with empty messages for the new chat
-  }, [setConversations]);
+    setActiveMessages([]);
+  }, [setConversations, currentUser]);
 
   const handleSendMessage = async (queryText: string) => {
+    if (!currentUser) { // Should not happen
+      router.push('/auth');
+      return;
+    }
     let convId = currentConversationId;
 
     if (!convId) {
       const newConvId = uuidv4();
       const newConversation: Conversation = {
         id: newConvId,
-        title: queryText.substring(0, 40) + (queryText.length > 40 ? '...' : ''), // Set title from first query
+        title: queryText.substring(0, 40) + (queryText.length > 40 ? '...' : ''),
         messages: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -82,14 +96,10 @@ export default function HomePage() {
       timestamp: new Date().toISOString(),
     };
 
-    // Update active messages immediately for responsiveness
-    // If it's a new chat (convId was just set), activeMessages would be empty
     setActiveMessages(prev => [...prev, userMessage]);
-
     setConversations(prevConvs =>
       prevConvs.map(conv => {
         if (conv.id === convId) {
-          // Update title only if it's the first message of a "New Chat" titled conversation
           const isNewChatBeingNamed = conv.messages.length === 0 && conv.title === "New Chat";
           return {
             ...conv,
@@ -146,10 +156,12 @@ export default function HomePage() {
   };
 
   const handleSelectConversation = (id: string) => {
+    if (!currentUser) return;
     setCurrentConversationId(id);
   };
 
   const handleDeleteConversation = (id: string) => {
+    if (!currentUser) return;
     const remainingConversations = conversations.filter(c => c.id !== id);
     setConversations(remainingConversations);
     
@@ -165,6 +177,7 @@ export default function HomePage() {
   };
   
   const handleClearHistory = () => {
+    if (!currentUser) return;
     setConversations([]);
     setCurrentConversationId(null);
     setActiveMessages([]);
@@ -174,6 +187,13 @@ export default function HomePage() {
       });
   };
 
+  if (authLoading || !currentUser) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">
@@ -195,11 +215,9 @@ export default function HomePage() {
             onSendMessage={handleSendMessage}
             isLoading={isLoading}
             currentConversationId={currentConversationId}
-            // startNewConversation prop removed as it's no longer used by ChatInterface
           />
         </div>
       </div>
     </div>
   );
 }
-
