@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react'; // For loading state
+import { Loader2, Scale } from 'lucide-react'; // Import Scale icon
 
 export default function LandingPage() {
   const { currentUser, loading: authLoading } = useAuth();
@@ -38,7 +38,8 @@ export default function LandingPage() {
         </div>
 
         <main className="z-10 flex flex-col items-center">
-          <h1 className="mb-6 text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <Scale className="h-20 w-20 md:h-24 md:w-24 text-primary mb-6" /> {/* Added Scale icon */}
+          <h1 className="mb-6 text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             LEGIT.
           </h1>
           <p className="mb-10 max-w-xl text-lg md:text-xl text-foreground/90">
