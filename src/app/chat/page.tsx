@@ -67,27 +67,10 @@ export default function ChatPage() {
   }, [setConversations, currentUser]);
 
   const handleSendMessage = async (queryText: string) => {
-    if (!currentUser) { // Should not happen
+    if (!currentUser) {
       router.push('/auth');
       return;
     }
-    let convId = currentConversationId;
-
-    if (!convId) {
-      const newConvId = uuidv4();
-      const newConversation: Conversation = {
-        id: newConvId,
-        title: queryText.substring(0, 40) + (queryText.length > 40 ? '...' : ''),
-        messages: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setConversations(prev => [newConversation, ...prev]);
-      setCurrentConversationId(newConvId);
-      convId = newConvId;
-    }
-
-    if(!convId) return;
 
     const userMessage: Message = {
       id: uuidv4(),
@@ -96,21 +79,42 @@ export default function ChatPage() {
       timestamp: new Date().toISOString(),
     };
 
-    setActiveMessages(prev => [...prev, userMessage]);
-    setConversations(prevConvs =>
-      prevConvs.map(conv => {
-        if (conv.id === convId) {
-          const isNewChatBeingNamed = conv.messages.length === 0 && conv.title === "New Chat";
-          return {
-            ...conv,
-            title: isNewChatBeingNamed ? (queryText.substring(0, 40) + (queryText.length > 40 ? '...' : '')) : conv.title,
-            messages: [...conv.messages, userMessage],
-            updatedAt: new Date().toISOString(),
-          };
-        }
-        return conv;
-      })
-    );
+    let targetConversationId = currentConversationId;
+
+    if (!targetConversationId) {
+      // No current conversation, create a new one
+      const newConvId = uuidv4();
+      const newConversation: Conversation = {
+        id: newConvId,
+        title: queryText.substring(0, 40) + (queryText.length > 40 ? '...' : ''),
+        messages: [userMessage], // Include userMessage directly
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      setConversations(prev => [newConversation, ...prev]);
+      setCurrentConversationId(newConvId);
+      setActiveMessages([userMessage]); // Initialize active messages for the new chat
+      targetConversationId = newConvId;
+    } else {
+      // Existing conversation or "New Chat" placeholder
+      setActiveMessages(prev => [...prev, userMessage]);
+      setConversations(prevConvs =>
+        prevConvs.map(conv => {
+          if (conv.id === targetConversationId) {
+            const isRenamingNewChatPlaceholder = conv.messages.length === 0 && conv.title === "New Chat";
+            return {
+              ...conv,
+              title: isRenamingNewChatPlaceholder ? (queryText.substring(0, 40) + (queryText.length > 40 ? '...' : '')) : conv.title,
+              messages: [...conv.messages, userMessage],
+              updatedAt: new Date().toISOString(),
+            };
+          }
+          return conv;
+        })
+      );
+    }
+
+    if (!targetConversationId) return; // Should not be reached
 
     setIsLoading(true);
     try {
@@ -124,7 +128,7 @@ export default function ChatPage() {
       setActiveMessages(prev => [...prev, aiMessage]);
       setConversations(prevConvs =>
         prevConvs.map(conv =>
-          conv.id === convId
+          conv.id === targetConversationId
             ? { ...conv, messages: [...conv.messages, aiMessage], updatedAt: new Date().toISOString() }
             : conv
         )
@@ -145,7 +149,7 @@ export default function ChatPage() {
       setActiveMessages(prev => [...prev, errorMessage]);
       setConversations(prevConvs =>
         prevConvs.map(conv =>
-          conv.id === convId
+          conv.id === targetConversationId
             ? { ...conv, messages: [...conv.messages, errorMessage], updatedAt: new Date().toISOString() }
             : conv
         )
