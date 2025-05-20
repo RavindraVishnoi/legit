@@ -1,11 +1,7 @@
-
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Scale } from 'lucide-react'; // User icon is no longer needed here
-import { formatDistanceToNow } from 'date-fns';
-// useAuth is no longer needed here directly as we are removing user-specific avatar logic that used it.
-// If other user-specific info was needed, we'd keep it.
 
 interface ChatMessageProps {
   message: Message;
@@ -13,7 +9,6 @@ interface ChatMessageProps {
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.sender === 'user';
-  const timestamp = message.timestamp ? formatDistanceToNow(new Date(message.timestamp), { addSuffix: true }) : '';
 
   return (
     <div
@@ -38,14 +33,6 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
       >
         <p className="whitespace-pre-wrap">{message.text}</p>
-        {timestamp && (
-          <p className={cn(
-            "text-xs mt-1",
-            isUser ? "text-primary-foreground/70 text-right" : "text-muted-foreground text-left"
-            )}>
-            {timestamp}
-          </p>
-        )}
       </div>
       {/* User avatar block has been removed as per request */}
     </div>

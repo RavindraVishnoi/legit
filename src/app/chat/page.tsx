@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -63,7 +62,7 @@ export default function ChatPage() {
     };
     setConversations(prev => [newConversation, ...prev]);
     setCurrentConversationId(newConvId);
-    setActiveMessages([]);
+    setActiveMessages([]); // Initialize with no messages for new conversation
   }, [setConversations, currentUser]);
 
   const handleSendMessage = async (queryText: string) => {
@@ -93,11 +92,10 @@ export default function ChatPage() {
       };
       setConversations(prev => [newConversation, ...prev]);
       setCurrentConversationId(newConvId);
-      setActiveMessages([userMessage]); // Initialize active messages for the new chat
+      setActiveMessages([userMessage]);
       targetConversationId = newConvId;
     } else {
       // Existing conversation or "New Chat" placeholder
-      setActiveMessages(prev => [...prev, userMessage]);
       setConversations(prevConvs =>
         prevConvs.map(conv => {
           if (conv.id === targetConversationId) {
@@ -112,6 +110,8 @@ export default function ChatPage() {
           return conv;
         })
       );
+      // Immediately show user message
+      setActiveMessages(prev => [...prev, userMessage]);
     }
 
     if (!targetConversationId) return; // Should not be reached
@@ -125,6 +125,7 @@ export default function ChatPage() {
         text: aiResponse.answer,
         timestamp: new Date().toISOString(),
       };
+      // No useEffect reliance here; update active messages directly
       setActiveMessages(prev => [...prev, aiMessage]);
       setConversations(prevConvs =>
         prevConvs.map(conv =>
@@ -140,13 +141,15 @@ export default function ChatPage() {
         description: "Failed to get response from LEGIT. Please try again.",
         variant: "destructive",
       });
-       const errorMessage: Message = {
+      // Ensure error message is also added to view
+      setActiveMessages(prev => [...prev, { id: uuidv4(), sender: 'ai', text: "Sorry, I encountered an error. Please try again.", timestamp: new Date().toISOString() }]);
+      const errorMessage: Message = {
         id: uuidv4(),
         sender: 'ai',
         text: "Sorry, I encountered an error. Please try again.",
         timestamp: new Date().toISOString(),
       };
-      setActiveMessages(prev => [...prev, errorMessage]);
+      // No setActiveMessages here; rely on conversation state
       setConversations(prevConvs =>
         prevConvs.map(conv =>
           conv.id === targetConversationId
@@ -203,16 +206,14 @@ export default function ChatPage() {
     <div className="flex h-screen flex-col bg-background text-foreground">
       <AppHeader onNewChat={handleNewConversation} />
       <div className="flex flex-1 overflow-hidden">
-        <div className="group w-20 hover:w-72 transition-all duration-300 ease-in-out border-r border-sidebar-border bg-sidebar-background p-0 hidden md:flex md:flex-col overflow-hidden">
-          <HistorySidebar
-            conversations={conversations}
-            currentConversationId={currentConversationId}
-            onSelectConversation={handleSelectConversation}
-            onDeleteConversation={handleDeleteConversation}
-            onNewConversation={handleNewConversation}
-            onClearHistory={handleClearHistory}
-          />
-        </div>
+        <HistorySidebar
+          conversations={conversations}
+          currentConversationId={currentConversationId}
+          onSelectConversation={handleSelectConversation}
+          onDeleteConversation={handleDeleteConversation}
+          onNewConversation={handleNewConversation}
+          onClearHistory={handleClearHistory}
+        />
         <div className="flex-1 flex flex-col bg-background">
           <ChatInterface
             messages={activeMessages}

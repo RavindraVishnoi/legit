@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -33,20 +32,20 @@ export default function LandingPage() {
         {/* Optional: Large background text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <h1 className="text-[25vw] md:text-[20vw] lg:text-[15vw] font-black text-primary/10 select-none tracking-tighter">
-            LEGIT
+            LEGIT.
           </h1>
         </div>
 
         <main className="z-10 flex flex-col items-center">
           <Scale className="h-20 w-20 md:h-24 md:w-24 text-primary mb-6" /> {/* Added Scale icon */}
           <h1 className="mb-6 text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            LEGIT
+            LEGIT.
           </h1>
           <p className="mb-10 max-w-xl text-lg md:text-xl text-foreground/90">
             Your intelligent AI-powered legal assistant. Get answers to your legal queries and summarize complex documents with ease.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/auth" passHref>
+            <Link href="/auth/login" passHref>  {/* Updated to /auth/login */}
               <Button size="lg" className="w-full sm:w-auto px-10 py-6 text-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl transition-transform transform hover:scale-105">
                 Login
               </Button>

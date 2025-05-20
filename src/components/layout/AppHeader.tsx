@@ -1,5 +1,4 @@
-
-import { Scale, User, LogOut, LogIn, Info } from 'lucide-react';
+import { Scale, User, LogOut, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -39,10 +38,6 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
       </div>
       
       <div className="flex items-center gap-2 md:gap-3">
-        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hidden sm:inline-flex">
-            <Info className="mr-1.5 h-4 w-4" />
-            About
-        </Button>
         {authLoading ? (
           <Skeleton className="h-10 w-24 rounded-md" />
         ) : currentUser ? (

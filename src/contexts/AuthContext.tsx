@@ -1,8 +1,7 @@
-
 'use client';
 
 import type { User } from 'firebase/auth';
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { app as firebaseApp } from '@/lib/firebase/config';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -12,6 +11,7 @@ interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
+  signUpWithEmail: (name: string, email: string, password: string) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signOutUser: () => Promise<void>;
 }
@@ -48,6 +48,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error signing in with Google", error);
       toast({ title: "Sign In Failed", description: error.message || "Could not sign in with Google.", variant: "destructive" });
       setLoading(false); 
+    }
+  };
+
+  const signUpWithEmail = async (name: string, email: string, password: string) => {
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: name });
+      }
+      toast({ title: "Account Created", description: "Your account has been created successfully." });
+      if (pathname === '/auth' || pathname === '/') {
+        router.push('/chat');
+      }
+    } catch (error: any) {
+      console.error("Error signing up with email", error);
+      let errorMessage = "Could not create account.";
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Email already in use.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      toast({ title: "Sign Up Failed", description: errorMessage, variant: "destructive" });
+      setLoading(false);
     }
   };
 
@@ -89,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, signInWithEmail, signOutUser }}>
+    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOutUser }}>
       {children}
     </AuthContext.Provider>
   );
