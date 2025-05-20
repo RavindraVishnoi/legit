@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from 'uuid'; // Using uuid for robust ID generation
 
 export default function HomePage() {
-  const [conversations, setConversations] = useLocalStorage<Conversation[]>('llamaLegitConversations', []);
+  const [conversations, setConversations] = useLocalStorage<Conversation[]>('legitConversations', []);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [activeMessages, setActiveMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,7 +131,7 @@ export default function HomePage() {
       console.error('Error fetching AI response:', error);
       toast({
         title: "Error",
-        description: "Failed to get response from LlamaLegit. Please try again.",
+        description: "Failed to get response from LEGIT. Please try again.",
         variant: "destructive",
       });
       // Optionally, add an error message to chat

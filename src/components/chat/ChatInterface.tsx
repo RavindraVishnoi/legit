@@ -25,7 +25,7 @@ export function ChatInterface({
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-background text-center">
         <Scale className="w-20 h-20 mb-6 text-primary opacity-70" />
-        <h2 className="text-3xl font-bold mb-3 text-foreground">Welcome to LlamaLegit</h2>
+        <h2 className="text-3xl font-bold mb-3 text-foreground">Welcome to LEGIT</h2>
         <p className="text-lg text-muted-foreground mb-6 max-w-md">
           Your AI-powered legal query assistant. Get insights and guidance on your legal questions.
         </p>
