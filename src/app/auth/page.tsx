@@ -84,10 +84,8 @@ export default function AuthPage() {
       </div>
       <Card className="w-full max-w-md rounded-xl border-border/50 shadow-2xl overflow-hidden z-10">
         <CardHeader className="bg-card p-6 text-center">
-           <div className="mx-auto mb-6 h-20 w-20">
-             <Image src="https://placehold.co/100x100.png" alt="LEGIT Logo" width={100} height={100} className="rounded-full" data-ai-hint="scale justice" />
-           </div>
-          <CardTitle className="text-3xl font-bold tracking-tight text-primary">
+           {/* Removed Image component from here */}
+          <CardTitle className="text-3xl font-bold tracking-tight text-primary pt-6">
             Welcome to LEGIT
           </CardTitle>
           <CardDescription className="text-muted-foreground pt-1">
@@ -157,3 +155,4 @@ export default function AuthPage() {
     </div>
   );
 }
+
