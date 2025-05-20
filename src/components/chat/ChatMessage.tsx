@@ -2,29 +2,35 @@
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Scale } from 'lucide-react'; // Changed Sparkles to Scale
+import { User, Scale } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ChatMessageProps {
   message: Message;
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  const { currentUser } = useAuth();
   const isUser = message.sender === 'user';
   const timestamp = message.timestamp ? formatDistanceToNow(new Date(message.timestamp), { addSuffix: true }) : '';
+
+  const userAvatarSrc = currentUser?.photoURL;
+  const userAvatarFallback = currentUser?.displayName
+    ? currentUser.displayName.charAt(0).toUpperCase()
+    : <User className="h-5 w-5 text-muted-foreground" />;
 
   return (
     <div
       className={cn(
-        'flex items-start gap-3 my-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 px-4', // Added px-4 for horizontal padding
+        'flex items-start gap-3 my-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 px-4',
         isUser ? 'justify-end' : 'justify-start'
       )}
     >
       {!isUser && (
-        <Avatar className="h-8 w-8 border-0 shadow-none bg-transparent"> {/* Removed border, shadow, bg for AI */}
-          {/* <AvatarImage src="https://placehold.co/40x40.png" alt="AI Avatar" data-ai-hint="robot face" /> REMOVED for AI */}
-          <AvatarFallback className="bg-transparent"> {/* Transparent fallback background */}
-            <Scale className="h-5 w-5 text-primary" /> {/* Using Scale icon (LEGIT logo) for AI */}
+        <Avatar className="h-8 w-8 border-0 shadow-none bg-transparent">
+          <AvatarFallback className="bg-transparent">
+            <Scale className="h-5 w-5 text-primary" />
           </AvatarFallback>
         </Avatar>
       )}
@@ -48,9 +54,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
       </div>
       {isUser && (
         <Avatar className="h-8 w-8 border border-border shadow-sm">
-           <AvatarImage src="https://placehold.co/40x40.png" alt="User Avatar" data-ai-hint="person silhouette" />
+           <AvatarImage src={userAvatarSrc || "https://placehold.co/40x40.png"} alt={currentUser?.displayName || "User Avatar"} data-ai-hint="person silhouette" />
           <AvatarFallback>
-            <User className="h-5 w-5 text-muted-foreground" />
+            {userAvatarFallback}
           </AvatarFallback>
         </Avatar>
       )}
