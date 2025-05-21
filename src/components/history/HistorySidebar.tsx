@@ -28,8 +28,8 @@ export function HistorySidebar({
   return (
     <aside className="group flex h-full flex-col bg-gradient-to-b from-sidebar-background/90 to-sidebar-background/70 border-r border-border w-16 hover:w-64 transition-all duration-300 overflow-hidden shadow-xl rounded-r-2xl">
       {/* Top menu and new chat */}
-      <div className="flex flex-col gap-2 p-3">
-        <Button variant="ghost" size="icon" title="Menu" className="rounded-lg hover:bg-accent/30 w-full flex justify-center">
+      <div className="flex flex-col gap-2 p-3 items-center">
+        <Button variant="ghost" size="icon" title="Menu" className="rounded-lg hover:bg-accent/30 w-full flex justify-center items-center">
           <Menu className="h-5 w-5" />
         </Button>
         <Button variant="ghost" title="New Chat" onClick={onNewConversation} className="rounded-lg hover:bg-primary/10 w-full flex items-center justify-center group-hover:justify-start transition-all">
@@ -71,12 +71,12 @@ export function HistorySidebar({
         </div>
       </ScrollArea>
       {/* Settings at bottom */}
-      <div className="p-3 flex flex-col gap-2">
-        <Button variant="ghost" title="About" className="rounded-lg hover:bg-accent/30 w-full flex items-center justify-center group-hover:justify-start transition-all">
+      <div className="p-3 flex flex-col gap-2 items-center">
+        <Button variant="ghost" title="About" className="rounded-lg hover:bg-accent/30 w-full flex items-center justify-center">
           <Info className="h-5 w-5" />
           <span className="ml-2 hidden group-hover:inline text-sm font-medium">About</span>
         </Button>
-        <Button variant="ghost" title="Settings" className="rounded-lg hover:bg-accent/30 w-full flex items-center justify-center group-hover:justify-start transition-all">
+        <Button variant="ghost" title="Settings" className="rounded-lg hover:bg-accent/30 w-full flex items-center justify-center">
           <Settings className="h-5 w-5" />
           <span className="ml-2 hidden group-hover:inline text-sm font-medium">Settings</span>
         </Button>
