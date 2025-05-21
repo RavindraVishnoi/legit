@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Menu, Plus, Trash2, MessageSquareText, Settings, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface HistorySidebarProps {
   conversations: Conversation[];
@@ -23,20 +24,41 @@ export function HistorySidebar({
   onNewConversation,
   onClearHistory,
 }: HistorySidebarProps) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const sorted = conversations
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   return (
-    <aside className="group flex h-full flex-col bg-gradient-to-b from-sidebar-background/90 to-sidebar-background/70 border-r border-border w-16 hover:w-64 transition-all duration-300 overflow-hidden shadow-xl rounded-r-2xl">
-      {/* Top menu and new chat */}
+    <aside
+      className="group flex h-full flex-col bg-gradient-to-b from-sidebar-background/90 to-sidebar-background/70 border-r border-border w-16 hover:w-64 transition-all duration-300 overflow-hidden shadow-xl rounded-r-2xl"
+      onMouseEnter={() => setSidebarExpanded(true)}
+      onMouseLeave={() => setSidebarExpanded(false)}
+    >
+      {/* Top menu and actions */}
       <div className="flex flex-col gap-2 p-3 items-center">
-        <Button variant="ghost" size="icon" title="Menu" className="rounded-lg hover:bg-accent/30 w-full flex justify-center items-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          title="Menu"
+          className="rounded-lg hover:bg-accent/30 w-full flex items-center justify-center group-hover:justify-center"
+        >
           <Menu className="h-5 w-5" />
+          <span className="ml-2 hidden group-hover:inline text-sm font-medium">Menu</span>
         </Button>
-        <Button variant="ghost" title="New Chat" onClick={onNewConversation} className="rounded-lg hover:bg-primary/10 w-full flex items-center justify-center group-hover:justify-start transition-all">
+        <Button
+          variant="ghost"
+          title="New Chat"
+          onClick={onNewConversation}
+          className="rounded-lg hover:bg-primary/10 w-full flex items-center justify-center"
+        >
           <Plus className="h-5 w-5" />
           <span className="ml-2 hidden group-hover:inline text-sm font-medium">New Chat</span>
         </Button>
-        <Button variant="ghost" title="Clear History" onClick={onClearHistory} className="rounded-lg hover:bg-destructive/10 w-full flex items-center justify-center group-hover:justify-start transition-all">
+        <Button
+          variant="ghost"
+          title="Clear History"
+          onClick={onClearHistory}
+          className="rounded-lg hover:bg-destructive/10 w-full flex items-center justify-center"
+        >
           <Trash2 className="h-5 w-5" />
           <span className="ml-2 hidden group-hover:inline text-sm font-medium">Clear</span>
         </Button>

@@ -108,3 +108,28 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Sidebar specific styles */
+[data-sidebar="menu"] {
+  @apply flex flex-col gap-2 p-4;
+}
+
+[data-sidebar="menu-item"] {
+  @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors;
+}
+
+[data-sidebar="menu-item"][data-active="true"] {
+  @apply bg-sidebar-primary text-sidebar-primary-foreground;
+}
+
+[data-sidebar="menu-action"] {
+  @apply absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-full bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80;
+}
+
+[data-sidebar="menu-badge"] {
+  @apply absolute right-2 top-2 text-xs font-semibold text-sidebar-foreground bg-sidebar-border rounded-full px-2 py-1;
+}
+
+[data-sidebar="menu-skeleton"] {
+  @apply animate-pulse bg-muted rounded-md;
+}
