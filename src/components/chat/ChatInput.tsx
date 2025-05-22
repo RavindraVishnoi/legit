@@ -74,7 +74,6 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const base64 = e.target?.result as string;
-      onSendMessage('Summarizing document: ' + selectedFile.name);
       try {
         const result = await summarizeLegalDocument({ documentDataUri: base64, query: instructions });
         onSendMessage(result.summary);
@@ -95,7 +94,7 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
       console.error("Error reading file.");
       onSendMessage("Sorry, there was an error reading the file.");
       setIsSummarizing(false);
-    }
+    };
     reader.readAsDataURL(selectedFile);
   };
 

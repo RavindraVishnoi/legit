@@ -29,24 +29,6 @@ export default function ChatPage() {
     }
   }, [currentUser, authLoading, router]);
 
-  // Effect to load messages for the current conversation
-  useEffect(() => {
-    if (currentUser && currentConversationId) {
-      const currentConv = conversations.find(c => c.id === currentConversationId);
-      // Only update activeMessages if it doesn't already match the current conversation's messages
-      if (
-        currentConv &&
-        (activeMessages.length !== currentConv.messages.length ||
-          !activeMessages.every((msg, index) => msg.id === currentConv.messages[index].id))
-      ) {
-        setActiveMessages(currentConv.messages);
-      }
-    } else if (currentUser) { // User is logged in but no conversation selected
-      setActiveMessages([]);
-    }
-    // If no user, this effect should not run to change activeMessages, as page will redirect
-  }, [currentConversationId, conversations, currentUser]);
-
   // Auto-select most recent conversation if one exists and none is selected
   useEffect(() => {
     if (currentUser && !currentConversationId && conversations.length > 0) {
@@ -71,6 +53,13 @@ export default function ChatPage() {
     setCurrentConversationId(newConvId);
     setActiveMessages([]); // Initialize with no messages for new conversation
   }, [setConversations, currentUser]);
+
+  // Automatically create a new chat if none exist
+  useEffect(() => {
+    if (currentUser && conversations.length === 0) {
+      handleNewConversation();
+    }
+  }, [currentUser, conversations, handleNewConversation]);
 
   const handleSendMessage = async (queryText: string) => {
     if (!currentUser) {
@@ -123,6 +112,15 @@ export default function ChatPage() {
 
     if (!targetConversationId) return; // Should not be reached
 
+    // Add a "thinking" message
+    const thinkingMessage: Message = {
+      id: uuidv4(),
+      sender: 'ai',
+      text: 'Thinking...',
+      timestamp: new Date().toISOString(),
+    };
+    setActiveMessages(prev => [...prev, thinkingMessage]);
+
     setIsLoading(true);
     try {
       const aiResponse = await legalQuery({ query: queryText });
@@ -132,8 +130,8 @@ export default function ChatPage() {
         text: aiResponse.answer,
         timestamp: new Date().toISOString(),
       };
-      // No useEffect reliance here; update active messages directly
-      setActiveMessages(prev => [...prev, aiMessage]);
+      // Replace "thinking" message with the actual AI response
+      setActiveMessages(prev => prev.map(msg => (msg.id === thinkingMessage.id ? aiMessage : msg)));
       setConversations(prevConvs =>
         prevConvs.map(conv =>
           conv.id === targetConversationId
@@ -148,20 +146,12 @@ export default function ChatPage() {
         description: "Failed to get response from LEGIT. Please try again.",
         variant: "destructive",
       });
-      // Ensure error message is also added to view
-      setActiveMessages(prev => [...prev, { id: uuidv4(), sender: 'ai', text: "Sorry, I encountered an error. Please try again.", timestamp: new Date().toISOString() }]);
-      const errorMessage: Message = {
-        id: uuidv4(),
-        sender: 'ai',
-        text: "Sorry, I encountered an error. Please try again.",
-        timestamp: new Date().toISOString(),
-      };
-      // No setActiveMessages here; rely on conversation state
-      setConversations(prevConvs =>
-        prevConvs.map(conv =>
-          conv.id === targetConversationId
-            ? { ...conv, messages: [...conv.messages, errorMessage], updatedAt: new Date().toISOString() }
-            : conv
+      // Replace "thinking" message with an error message
+      setActiveMessages(prev =>
+        prev.map(msg =>
+          msg.id === thinkingMessage.id
+            ? { ...thinkingMessage, text: "Sorry, I encountered an error. Please try again." }
+            : msg
         )
       );
     } finally {

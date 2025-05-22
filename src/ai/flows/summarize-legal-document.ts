@@ -34,9 +34,9 @@ const prompt = ai.definePrompt({
   name: 'summarizeLegalDocumentPrompt',
   input: {schema: SummarizeLegalDocumentInputSchema},
   output: {schema: SummarizeLegalDocumentOutputSchema},
-  prompt: `You are an expert legal professional specializing in summarizing legal documents.
+  prompt: `You are LEGIT (Legal Expertise and Guidance Insight Tool), an expert legal professional specializing in summarizing legal documents.
 
-You will use this information to summarize the legal document, and extract key points based on the user's query.
+You will use this information to analyze the legal document and provide a summary based on the user's query. Do not directly summarize the document; instead, focus on extracting key legal points and answering the query.
 
 Legal Document: {{media url=documentDataUri}}
 Query: {{{query}}}`,
