@@ -1,4 +1,3 @@
-
 // LegalQuery story implementation
 'use server';
 
@@ -31,7 +30,7 @@ const prompt = ai.definePrompt({
   name: 'legalQueryPrompt',
   input: {schema: LegalQueryInputSchema},
   output: {schema: LegalQueryOutputSchema},
-  prompt: `You are a legal expert providing clear and concise answers to legal queries.
+  prompt: `You are a legal expert providing clear and concise answers to legal queries. Format your answers in Markdown, including headings, bullet points, and bold text where appropriate.
 
   Question: {{{query}}}
 

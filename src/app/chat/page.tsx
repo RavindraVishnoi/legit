@@ -33,8 +33,22 @@ export default function ChatPage() {
   useEffect(() => {
     if (currentUser && currentConversationId) {
       const currentConv = conversations.find(c => c.id === currentConversationId);
-      setActiveMessages(currentConv ? currentConv.messages : []);
+      console.log("Before updating activeMessages:", activeMessages);
+      // Merge activeMessages with currentConv.messages, avoiding duplicates
+      if (currentConv) {
+        const mergedMessages = [...currentConv.messages];
+        activeMessages.forEach(msg => {
+          if (!mergedMessages.some(m => m.id === msg.id)) {
+            mergedMessages.push(msg);
+          }
+        });
+        // Sort messages by timestamp to maintain correct order
+        mergedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        setActiveMessages(mergedMessages);
+        console.log("Updated activeMessages:", mergedMessages);
+      }
     } else if (currentUser) { // User is logged in but no conversation selected
+      console.log("Resetting activeMessages to an empty array.");
       setActiveMessages([]);
     }
     // If no user, this effect should not run to change activeMessages, as page will redirect
@@ -62,7 +76,7 @@ export default function ChatPage() {
     };
     setConversations(prev => [newConversation, ...prev]);
     setCurrentConversationId(newConvId);
-    setActiveMessages([]); // Initialize with no messages for new conversation
+    // setActiveMessages([]); // REMOVED: As per instruction, useEffect will handle clearing activeMessages
   }, [setConversations, currentUser]);
 
   const handleSendMessage = async (queryText: string) => {

@@ -1,7 +1,9 @@
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Scale } from 'lucide-react'; // User icon is no longer needed here
+import { Scale } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessageProps {
   message: Message;
@@ -26,15 +28,31 @@ export function ChatMessage({ message }: ChatMessageProps) {
       )}
       <div
         className={cn(
-          'max-w-[70%] rounded-lg p-3 shadow-md text-sm',
           isUser
-            ? 'bg-primary text-primary-foreground rounded-br-none'
-            : 'bg-card text-card-foreground rounded-bl-none border border-border'
+            ? 'max-w-[70%] rounded-lg p-3 shadow-md text-sm bg-primary text-primary-foreground rounded-br-none'
+            : 'w-full bg-card text-card-foreground p-4 rounded-lg border border-border'
         )}
       >
-        <p className="whitespace-pre-wrap">{message.text}</p>
+        {isUser ? (
+          <p className="whitespace-pre-wrap">{message.text}</p>
+        ) : (
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h1: ({ node, ...props }) => (
+                <h1 className="font-semibold mb-2" {...props} />
+              ),
+              ul: ({ node, ...props }) => <ul className="pl-5" {...props} />,
+              li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+              strong: ({ node, ...props }) => (
+                <strong className="font-bold" {...props} />
+              ),
+            }}
+          >
+            {message.text}
+          </ReactMarkdown>
+        )}
       </div>
-      {/* User avatar block has been removed as per request */}
     </div>
   );
 }
