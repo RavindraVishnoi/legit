@@ -12,6 +12,10 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+const model1 = 'googleai/gemini-1.5-flash-latest';
+const model2 = 'googleai/gemini-2.5-flash-preview-05-20';
+const model3 = 'googleai/gemini-2.5-pro-preview-05-06';
+
 const LegalQueryInputSchema = z.object({
   query: z.string().describe('The legal query in natural language.'),
 });
@@ -36,7 +40,7 @@ const prompt = ai.definePrompt({
 
   Answer:`,
   // Using a generally available and stable model
-  model: 'googleai/gemini-1.5-flash-latest',
+  model: model1,
 });
 
 const legalQueryFlow = ai.defineFlow(
