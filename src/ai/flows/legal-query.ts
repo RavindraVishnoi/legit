@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
 
   Answer:`,
   // Using a generally available and stable model
-  model: model1,
+  model: model2,
 });
 
 const legalQueryFlow = ai.defineFlow(
