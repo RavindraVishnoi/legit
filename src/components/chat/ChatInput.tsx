@@ -104,7 +104,8 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex w-full max-w-3xl mx-auto items-end gap-2 rounded-xl border border-border bg-card p-2.5 shadow-lg"
+          className="flex w-full max-w-3xl mx-auto items-end gap-2 rounded-xl border border-border bg-card p-2.5 shadow-lg overflow-y-auto" // Added overflow-y-auto for vertical scrollbar
+          style={{ maxHeight: 'calc(100vh - 200px)', overflowX: 'hidden' }} // Ensures the scrollbar is on the right side
         >
           <Tooltip>
             <TooltipTrigger asChild>
@@ -141,8 +142,8 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
                   <Textarea
                     {...field}
                     placeholder="Ask LEGIT..."
-                    rows={1}
-                    className="min-h-[40px] max-h-[150px] resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none p-2 text-base"
+                    rows={3} // Increased rows for vertical size
+                    className="min-h-[80px] max-h-[200px] resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none p-2 text-base w-full" // Adjusted min/max height and ensured full width
                     onKeyDown={handleKeyDown}
                     disabled={isLoading || isSummarizing}
                     aria-label="Ask LEGIT"
