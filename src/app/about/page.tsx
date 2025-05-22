@@ -73,9 +73,9 @@ export default function AboutPage() {
                   )}
                 >
                   <div className="w-32 h-32 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden border-2 border-primary/50">
-                    <Image 
-                      src={member.photo} 
-                      alt={`Photo of ${member.name}`} 
+                    <Image
+                      src={member.photo || "/photos/avatar.gif"}
+                      alt={member.name}
                       width={128} 
                       height={128} 
                       className="object-cover" 

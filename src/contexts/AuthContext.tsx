@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await firebaseSignOut(auth);
       toast({ title: "Signed Out", description: "You have been successfully signed out." });
-      router.push('/auth/login'); // Redirect to the new landing page
+      router.push('/'); // Redirect to the new landing page
     } catch (error: any) {
       console.error("Error signing out", error);
       toast({ title: "Sign Out Failed", description: error.message || "Could not sign out.", variant: "destructive" });
