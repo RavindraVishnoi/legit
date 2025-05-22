@@ -23,7 +23,7 @@ export function AppHeader({ onNewChat }: AppHeaderProps) {
 
   const handleLogout = async () => {
     await signOutUser();
-    // signOutUser in AuthContext handles navigation to /auth
+    // Navigation is handled by signOutUser in AuthContext
   };
 
   const handleLogin = () => {
