@@ -11,7 +11,7 @@ const teamMembers = [
     name: "Avijeet Singh Bhati",
     role: "Project Lead & AI Model Strategist",
     bio: "Avijeet provides the strategic direction for Project LEGIT, guiding the overall project and specializing in the AI model strategy, ensuring our LLaMA 3.1 integration delivers unparalleled legal insight.",
-    photo: "" 
+    photo: "/photos/avijeet.png" 
   },
   {
     name: "Ravindra Vishnoi",
@@ -23,13 +23,13 @@ const teamMembers = [
     name: "Akanksha Thakur",
     role: "Lead Data Engineer",
     bio: "Akanksha spearheads our data operations, meticulously curating and transforming complex legal information into high-quality datasets, forming the backbone of our AI's legal knowledge.",
-    photo: ""
+    photo: "/photos/akanksha.jpg"
   },
   {
     name: "Karan",
     role: "AI/ML Development Lead",
     bio: "Karan takes the helm of our AI model development, expertly fine-tuning the LLaMA 3.1 model with our specialized legal datasets to achieve state-of-the-art legal understanding.",
-    photo: ""
+    photo: "/photos/karan.jpg"
   },
   {
     name: "Vishal Kumar",
